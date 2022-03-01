@@ -1,0 +1,105 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>숫자야구</title>
+</head>
+<body>
+<form id="form">
+  <input type="text" id="input">
+  <button>확인</button>
+</form>
+<div id="logs"></div>
+<script>
+  const $input = document.querySelector('#input');
+  const $form = document.querySelector('#form');
+  const $logs = document.querySelector('#logs');
+
+  const number = [];
+  for( let i=0; i<=9; i++ ){
+    number.push(i);
+  }
+
+  const answer = [];
+  for( let i=0; i<4; i++ ){
+    const index = Math.floor(Math.random()*number.length);
+    answer.push(number[index]);
+    number.splice(index,1);
+  }
+
+  console.log(answer);
+
+  const tries = [];
+  function checkInput(input){
+    if( input.length !==4 ){
+      return alert('4자리 숫자를 입력 해주세요');
+    }
+    if( new Set(input).size !==4 ){
+      return alert('중복되지 않게 입력해 주세요.');
+    }
+    if( tries.includes(input) ){
+      return alert('이미 시도한 값입니다');
+    }
+    return true;
+  }
+
+  function defeated(){
+    const message = document.createElement('div');
+    message.textContent = `패배! 정답은 ${answer.join('')}`
+    $logs.appendChild(message);
+  };
+
+  $form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const value = $input.value;
+    $input.value = '';
+    
+    if(!checkInput(value)){
+      return;
+    }
+
+    if( value === answer.join('') ){
+      $logs.textContent = '홈런!';
+      return;
+    }
+
+    if( tries.length >=9 ){
+      defeated();
+    }
+
+    let strike = 0;
+    let ball = 0;
+    let out = 0;
+    for( let i=0; i<answer.length; i++ ){
+      const index = value.indexOf(answer[i]);
+      if( index > -1 ){
+        if( index === i ){
+          strike+=1;
+        } else {
+          ball+=1;
+        }
+      }
+    }
+
+    if( strike===0 && ball===0 ){
+      out++;
+      const message = document.createElement('div');
+      message.textContent = `${value} 아웃`;
+      $logs.appendChild(message);
+    } else {
+      const message = document.createElement('div');
+      message.textContent = `${value}: ${strike} 스트라이크 ${ball} 볼 ${out} aout`;
+      $logs.appendChild(message);
+    }
+
+    if( ball === 3 ){
+      defeated();
+    }
+
+    tries.push(value);
+  });
+  
+  
+</script>
+</body>
+</html>

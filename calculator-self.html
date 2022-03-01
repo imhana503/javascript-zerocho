@@ -1,0 +1,154 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>계산기</title>
+  <style>
+    * {
+      box-sizing:border-box;
+    }
+    #result {width:180px; height:50px; margin:5px; text-align:right}
+    #operator {width:50px; height:50px; margin:5px; text-align:right}
+    button {width:50px; height:50px; margin:5px;}
+  </style>
+</head>
+<body>
+  <input readonly type="text" id="operator">
+  <input readonly type="number" id="result">
+  <div class="row">
+    <button type="button" id="num-7" class="button">7</button>
+    <button type="button" id="num-8" class="button">8</button>
+    <button type="button" id="num-9" class="button">9</button>
+    <button type="button" id="plus" class="operator">+</button>
+  </div>
+  <div class="row">
+    <button type="button" id="num-4" class="button">4</button>
+    <button type="button" id="num-5" class="button">5</button>
+    <button type="button" id="num-6" class="button">6</button>
+    <button type="button" id="minus" class="operator">-</button>
+  </div>
+  <div class="row">
+    <button type="button" id="num-1" class="button">1</button>
+    <button type="button" id="num-2" class="button">2</button>
+    <button type="button" id="num-3" class="button">3</button>
+    <button type="button" id="divide" class="operator">/</button>
+  </div>
+  <div class="row">
+    <button type="button" id="clear">C</button>
+    <button type="button" id="num-0" class="button">0</button>
+    <button type="button" id="calculate">=</button>
+    <button type="button" id="multiply" class="operator">x</button>
+  </div>
+  <script>
+
+    const $button = document.querySelectorAll('.button');
+    const $operator = document.querySelectorAll('.operator');
+    const $result = document.querySelector('#result');
+    const $operatorText = document.querySelector('#operator');
+    const $calculate = document.querySelector('#calculate');
+    const $clear = document.querySelector('#clear');
+
+    let numOne = '';
+    let numTwo = '';
+    let operator = '';
+
+    const onClickNumber = (event) => {
+      if( !operator ){
+        numOne += event.target.textContent;
+        $result.value = numOne;
+      } else {
+        if(!numTwo){
+          $result.value = '';
+        }
+        numTwo += event.target.textContent;
+        $result.value = numTwo;
+      }
+    }
+
+    const onClickOperator = (event) => {
+      if( numOne ){
+        operator = event.target.textContent;
+        $operatorText.value = operator;
+      } else {
+        alert('숫자를 먼저 입력하세요.');
+      }
+      if( numTwo ){
+        switch(operator){
+          case '+' :
+            $result.value = parseInt(numOne) + parseInt(numTwo);
+            break;
+          case '-' :
+            $result.value = parseInt(numOne) - parseInt(numTwo);
+            break;
+          case '/' :
+            $result.value = parseInt(numOne) / parseInt(numTwo);
+            break;
+          case 'x' :
+            $result.value = parseInt(numOne) * parseInt(numTwo);
+            break;
+          default :
+            break;
+        }
+        numOne = $result.value;
+        numTwo = '';
+      }
+    }
+
+    const onClickCalculate = () => {
+      if( numTwo ){
+        switch(operator){
+          case '+' :
+            $result.value = parseInt(numOne) + parseInt(numTwo);
+            break;
+          case '-' :
+            $result.value = parseInt(numOne) - parseInt(numTwo);
+            break;
+          case '/' :
+            $result.value = parseInt(numOne) / parseInt(numTwo);
+            break;
+          case 'x' :
+            $result.value = parseInt(numOne) * parseInt(numTwo);
+            break;
+          default :
+            break;
+        }
+        $operatorText.value = '';
+        numOne = $result.value;
+        operator = '';
+        numTwo = '';
+      } else {
+        alert('숫자를 먼저 입력하세요.');
+      }
+    }
+
+    const onClickClear = () => {
+      numOne = '';
+      numTwo = '';
+      operator = '';
+      $operatorText.value = '';
+      $result.value = '';
+    }
+
+    $button.forEach(function($btns){
+      $btns.addEventListener('click', onClickNumber);
+    });
+
+    $operator.forEach(function($operators){
+      $operators.addEventListener('click', onClickOperator);
+    });
+
+    $calculate.addEventListener('click', onClickCalculate);
+
+    $clear.addEventListener('click', onClickClear)
+    
+
+   
+
+    
+
+
+
+  </script>
+</body>
+</html>
